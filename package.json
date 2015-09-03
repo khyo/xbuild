@@ -1,0 +1,57 @@
+{
+  "version": "0.1.0",
+  "name": "xbuild",
+  "main": "./lib/build",
+  "description": "Atom Build Integration",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/khyo/xbuild.git"
+  },
+  "license": "MIT",
+  "engines": {
+    "atom": ">=1.0.0"
+  },
+  "dependencies": {
+    "ansi-to-html": "^0.3.0",
+    "atom-space-pen-views": "^2.0.3",
+    "fs-extra": "^0.23.0",
+    "lodash": "^3.8.0",
+    "node-uuid": "^1.4.3",
+    "temp": "^0.8.1",
+    "tree-kill": "^0.1.1",
+    "xregexp": "^2.0.0"
+  },
+  "devDependencies": {
+    "jshint": "^2.5.11",
+    "jscs": "^1.9.0"
+  },
+  "consumedServices":{
+    "status-bar": {
+      "versions": {
+        "^1.0.0": "consumeStatusBar"
+      }
+    }
+  },
+  "providedServices": {
+    "debug_target": {
+      "versions": {
+        "1.0.0": "provideDebugTargetGetter"
+      }
+    }
+  },
+  "scripts": {
+    "test": "jscs lib/*.js spec/*.js && ./node_modules/.bin/jshint lib/*.js spec/*.js"
+  },
+  "keywords": [
+    "build",
+    "compile",
+    "ninja",
+    "make",
+    "productivity"
+  ],
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/khyo/xbuild/issues"
+  },
+  "homepage": "https://github.com/khyo/xbuild#readme"
+}

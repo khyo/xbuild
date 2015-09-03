@@ -1,0 +1,18 @@
+{
+  "atom-workspace": {
+    "shift-f9": "xbuild:target",
+    "ctrl-f9": "xbuild:test",
+    "ctrl-shift-f9": "xbuild:clean",
+    "shift-f10": "xbuild:active",
+    "shift-f11": "xbuild:exec-active",
+    "ctrl-d b p": "xbuild:select-project",
+    "ctrl-d b v": "xbuild:toggle"
+  },
+  ".build": {
+    "escape": "xbuild:toggle"
+  },
+  ".build-confirm": {
+    "enter": "xbuild:confirm",
+    "escape": "xbuild:no-confirm"
+  }
+}

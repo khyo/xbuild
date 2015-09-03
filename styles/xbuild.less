@@ -1,0 +1,78 @@
+@import "ui-variables";
+
+.xbuild-project{ color: @ui-site-color-2; }
+.xbuild-target{ color: @ui-site-color-1; }
+.xbuild-status{ margin-left: 0.2rem; }
+
+.build {
+  .title {
+    transition: background-color 0.2s ease-in;
+  }
+
+  .build-timer {
+    display: inline-block;
+    width: 5em;
+    margin-right: 10px;
+  }
+
+  .title.error {
+    color: white;
+    background-image: none;
+    background-color: @background-color-error;
+  }
+
+  .title.success {
+    color: white;
+    background-image: none;
+    background-color: @background-color-success;
+  }
+
+  .title.warning {
+    color: white;
+    background-image:none;
+    background-color: @background-color-warning;
+  }
+
+  .output {
+    margin-right: 5rem;
+    transition: height 0.5s ease-in-out;
+    padding: 10px 0 0 10px;
+    min-height: 135px;
+    overflow-y: auto;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    list-style: none;
+    font-family: "source code pro", "ubuntu mono", Courier, monospace;
+    font-size: 1.2rem;
+    color: #49C1FF; // white;
+  }
+
+  .output-good{
+    color: @text-color-success;
+    font-weight:bold;
+  }
+  .output-bad{
+    color: #FF2E2E;
+    font-weight:bold;
+  }
+  .output-ugly{
+    color: @text-color-warning;
+    font-weight:bold;
+  }
+}
+
+.btn-container {
+  width: 5rem;
+  .btn {
+    margin: 10px 10px 0 10px;
+    color: @text-color-info;
+  }
+
+  .icon::before {
+    margin: 0;
+  }
+
+  .new-row {
+    clear: both;
+  }
+}
