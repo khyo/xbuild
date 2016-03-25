@@ -32,8 +32,8 @@
       }
     }
   },
-  "providedServices": {
-    "debug_target": {
+  "providedServices":{
+    "debug-target": {
       "versions": {
         "1.0.0": "provideDebugTargetGetter"
       }

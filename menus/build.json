@@ -2,13 +2,13 @@
   "menu": [ {
     "label": "Packages",
     "submenu": [ {
-        "label": "Build",
+        "label": "XBuild",
         "submenu": [ {
-          "label": "Build project...",
+          "label": "Build Project...",
           "command": "build:trigger"
         },
         {
-          "label": "Terminate build.",
+          "label": "Terminate Build",
           "command": "build:stop"
         } ]
       } ]

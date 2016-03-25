@@ -6,6 +6,8 @@
     "shift-f10": "xbuild:active",
     "shift-f11": "xbuild:exec-active",
     "ctrl-d b p": "xbuild:select-project",
+    "ctrl-d b r": "xbuild:reload-project",
+    "ctrl-d b t": "xbuild:select-target",
     "ctrl-d b v": "xbuild:toggle"
   },
   ".build": {

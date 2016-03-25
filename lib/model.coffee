@@ -13,6 +13,7 @@ module.exports =
       @loadedProjectPaths = []
       @preferences = {}
       @master_preferences = null
+      @fsTimeout = null
       for projectPath in atom.project.getPaths()
         if @_readConfig(projectPath)
           @_readPreferences(projectPath)
@@ -21,15 +22,25 @@ module.exports =
     _readConfig: (projectPath) ->
       try
         configFile = fs.realpathSync(path.join(projectPath, '.xbuild.json'))
-        readConfigAgain = @_readConfig.bind(this, projectPath)
+
+        readConfigAgain = (
+          (event, filename) ->
+            if not @fsTimeout
+              @fsTimeout = setTimeout((()-> @fsTimeout = null).bind(this), 3000)
+              console.log("file watcher threw event:")
+              console.log(event)
+              @_readConfig(projectPath)
+        ) .bind(this)
 
         @projects[projectPath]?filewatcher?.close()
         @projects[projectPath]?filewatcher = undefined
         @projects[projectPath] = fs.readJsonSync(configFile)
+
+
         @projects[projectPath].filewatcher = fs.watch(
-          configFile, {persistent: false}, (event, filename) -> readConfigAgain())
+          configFile, {persistent: false}, readConfigAgain)
         @_compileProject(projectPath)
-        @onProjectChanged?(projectPath, $projects[projectPath])
+        @onProjectChanged?(projectPath, @projects[projectPath])
         return true
       catch
         console.log("Can't read .xbuild.json: #{projectPath}")
@@ -44,7 +55,7 @@ module.exports =
         for t in targets
           # Apply defaults in place of null fields
           for field in ["sh", "cwd", "build_cmd", "build_args", "debug_cmd",
-            "debug_args", "exec_cmd", "exec_args", "error_match"]
+            "debug_args", "exec_cmd", "exec_args", "error_match", "remote_arg"]
             t[field] = t[field] or d[field]
 
           # Add name as build/exec/debug parameter if flag is set

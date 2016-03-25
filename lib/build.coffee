@@ -6,17 +6,6 @@ kill = require('tree-kill')
 Model = require('./model')
 Controller = require('./controller')
 
-# SaveConfirmView = require('./save-confirm-view')
-# TargetsView = require('./targets-view')
-# BuildView = require('./build-view')
-# ErrorMatcher = require('./error-matcher')
-# tools = require('./tools')
-# extra_tools = []
-
-class BuildError extends Error
-  @content: (@name, @message) ->
-    @captureStackTrace(BuildError)
-
 module.exports =
   config:
     panelVisibility:
@@ -36,13 +25,13 @@ module.exports =
       title: 'Automatically save on build'
       description: 'Automatically save all edited files when triggering a build.'
       type: 'boolean'
-      default: false
+      default: true
       order: 3
     scrollOnError:
       title: 'Automatically scroll on build error'
       description: 'Automatically scroll to first matched error when a build failed.'
       type: 'boolean'
-      default: false
+      default: true
       order: 4
     stealFocus:
       title: 'Steal Focus'
@@ -89,6 +78,8 @@ module.exports =
       @controller.selectActiveProjectDialog()
     @subscriptions.add atom.commands.add 'atom-workspace', 'xbuild:select-target': =>
       @controller.selectActiveTargetDialog()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'xbuild:reload-project': =>
+      @controller.reloadActiveProject()
     @subscriptions.add atom.commands.add 'atom-workspace', 'xbuild:toggle': =>
       @controller.toggleBuildPane()
 

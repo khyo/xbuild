@@ -7,6 +7,8 @@ views = require('./views')
 views.SaveConfirmView = require('./save-confirm-view')  # using old save-confirm
 ErrorMatcher = require('./error-matcher')
 
+net = require('net')
+path = require('path')
 
 module.exports =
   class Controller
@@ -15,7 +17,7 @@ module.exports =
 
       # Wire up the model
       @subscriptions.add @model
-      @model.onProjectChanged = @modelChangedHandler
+      @model.onProjectChanged = @modelChangedHandler.bind(this)
       @modelChangedHandler()
 
       # Prepare the build child process
@@ -44,6 +46,10 @@ module.exports =
     modelChangedHandler: (projectPath, project) ->
       @activeProject = @getActiveProject()
       @updateStatusBar()
+
+    reloadActiveProject: ->
+      @model._readConfig(@activeProject)
+      @model._readPreferences(@activeProject)
 
     getActiveProject: ->
       projectPaths = atom.project.getPaths()
@@ -104,7 +110,31 @@ module.exports =
       # extract cmd and args based on the requested verb
       cmd = t[verb+"_cmd"]
       args = t[verb+"_args"]
+      is_remote_arg = t["remote_arg"]
 
+      if is_remote_arg and (verb == "debug" or verb == "exec")
+          console.log "connecting to remote arg server"
+          client = new net.Socket()
+          client.setEncoding('utf8')
+          client.connect 11233, '127.0.0.1', () =>
+              client.on 'data', (data) =>
+                  try
+                      client.end()
+                      port = JSON.parse(data)["port"]
+                      remote_arg = "-ex=target remote :#{port}"
+                      console.log remote_arg
+                      args[0] = remote_arg
+                  finally
+                      @startBuildContinued(t, cmd, args)
+              projname = path.basename(path.dirname(t.cwd)) # args.slice(-1).split("/")[1].split(".")[0].toLowerCase()
+              console.log "sending #{projname} request to remote arg server"
+              client.write(JSON.stringify({"arg": projname}))
+          client.on 'close', () =>
+              console.log "remote arg server connection closed"
+      else
+          @startBuildContinued(t, cmd, args)
+
+    startBuildContinued: (t, cmd, args) ->
       # if t.sh  # reformat cmd and args for shell if necessary
       #   args = ['-c ' + [cmd].concat(args).join(' ')]
       #   cmd = '/bin/sh'
@@ -113,7 +143,7 @@ module.exports =
       buildView = @buildView
       finishedTimer = @finishedTimer
 
-      @child = child_process.spawn(cmd, args, {cwd: t.cwd})
+      @child = child_process.spawn(cmd, args, {cwd: t.cwd, env: process.env})
       @child.stdout.on('data', (data) ->
         buildView.append(data))
 
