@@ -83,7 +83,9 @@ module.exports =
       @statusView.onClick(@selectActiveProjectDialog.bind(this),
         @selectActiveTargetDialog.bind(this))
       @updateStatusBar()
-      @subscriptions.add statusBar.addRightTile(item: @statusView, priority:300)
+      # error in Atom 1.12, statusBar no longer has dispose...I suppose we don't need to clean it
+      # @subscriptions.add statusBar.addRightTile(item: @statusView, priority:300)
+      statusBar.addRightTile(item: @statusView, priority:300)
 
     updateStatusBar: ->
       @statusView?.update(@activeProject.split('/').slice(-1), @getTarget("#target_active")?.name)
@@ -121,7 +123,7 @@ module.exports =
                   try
                       client.end()
                       port = JSON.parse(data)["port"]
-                      remote_arg = "-ex=target remote :#{port}"
+                      remote_arg = "-ex=target remote #{port}"
                       console.log remote_arg
                       args[0] = remote_arg
                   finally
